@@ -9,52 +9,53 @@ import { GameStates } from '~config/game';
  */
 
 class App {
-  private game: PhaserApp;
 
-  constructor(game: Phaser.Game, isCordovaApp: boolean) {
-    this.game = game;
+	private game: PhaserApp;
 
-    if (isCordovaApp) {
-      this.bindEvents();
-    } else {
-      this.bootGame();
-    }
-  }
+	constructor(game: Phaser.Game, isCordovaApp: boolean) {
+		this.game = game;
 
-  // Bind Event Listeners
-  //
-  // Bind any events that are required on startup. Common events are:
-  // 'load', 'deviceready', 'offline', and 'online'.
-  bindEvents() {
-    document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    document.addEventListener('backbutton', () => {
-      navigator.notification.confirm(
-        'Are you sure you want to quit?',
-        (buttonIndex: number) => {
-          if (buttonIndex === 1) {
-            navigator.app.exitApp();
-          }
-        },
-        'Quit application?',
-        ['Yes', 'No'],
-      );
-    });
-  }
+		if (isCordovaApp) {
+			this.bindEvents();
+		} else {
+			this.bootGame();
+		}
+	}
 
-  // deviceready Event Handler
-  //
-  // The scope of 'this' is the event. In order to call the 'receivedEvent'
-  // function, we must explicitly call 'app.receivedEvent(...);'
-  onDeviceReady() {
-    // Hide status bar
-    window.StatusBar.hide();
-    this.bootGame();
-  }
+	// Bind Event Listeners
+	//
+	// Bind any events that are required on startup. Common events are:
+	// 'load', 'deviceready', 'offline', and 'online'.
+	bindEvents(): void {
+		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		document.addEventListener('backbutton', () => {
+			navigator.notification.confirm(
+				'Are you sure you want to quit?',
+				(buttonIndex: number) => {
+					if (buttonIndex === 1) {
+						navigator.app.exitApp();
+					}
+				},
+				'Quit application?',
+				['Yes', 'No'],
+			);
+		});
+	}
 
-  bootGame = () => {
-    // Boot and load the magic
-    this.game.state.start(GameStates.BOOT);
-  };
+	// deviceready Event Handler
+	//
+	// The scope of 'this' is the event. In order to call the 'receivedEvent'
+	// function, we must explicitly call 'app.receivedEvent(...);'
+	onDeviceReady(): void {
+		// Hide status bar
+		window.StatusBar.hide();
+		this.bootGame();
+	}
+
+	bootGame = (): void => {
+		// Boot and load the magic
+		this.game.state.start(GameStates.BOOT);
+	};
 }
 
-(() => new App(new PhaserApp(PhaserConfig), !!window.cordova))();
+((): void => new App(new PhaserApp(PhaserConfig), !!window.cordova))();
